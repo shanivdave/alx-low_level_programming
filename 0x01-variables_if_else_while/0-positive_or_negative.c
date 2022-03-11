@@ -2,15 +2,11 @@
 #include <time.h>
 #include <stdio.h>
 
-/* more headers goes there */
 /**
- * main - entry point for function
+ * main - Entry point
  *
- * Description: decides if a random number is odd or even
- *
- * Return: always 0 (success)
+ * Return: Always 0 (Success)
  */
-/* betty style doc for function main goes there */
 int main(void)
 {
 	int n;
