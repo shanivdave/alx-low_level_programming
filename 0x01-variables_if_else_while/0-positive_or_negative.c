@@ -2,11 +2,15 @@
 #include <time.h>
 #include <stdio.h>
 
+/* more headers goes there */
 /**
- * main - Prints if number is positive, zero or negative
+ * main - entry point for function
  *
- * Return: Always (Success)
+ * Description: decides if a random number is odd or even
+ *
+ * Return: always 0 (success)
  */
+/* betty style doc for function main goes there */
 int main(void)
 {
 	int n;
