@@ -3,9 +3,11 @@
 #include <stdio.h>
 
 /**
- * main - Entry point
+ * main - returns 0
  *
- * Return:0
+ * Description - main returns 0
+ * printf - Prints a random number and info about it
+ * Return: 0
  */
 int main(void)
 {
