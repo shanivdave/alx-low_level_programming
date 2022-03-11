@@ -3,11 +3,9 @@
 #include <stdio.h>
 
 /**
- * main - returns 0
+ * main - Prints if number is positive, zero or negative
  *
- * Description - main returns 0
- * printf - Prints a random number and info about it
- * Return: 0
+ * Return: Always (Success)
  */
 int main(void)
 {
