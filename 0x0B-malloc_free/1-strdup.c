@@ -3,9 +3,7 @@
 
 /**
  * _strdup - Returns a pointer to a newly-allocated space in memory
- *           containing a copy of the string given as parameter.
  * @str:string
- *
  * Return:char
  */
 char *_strdup(char *str)
