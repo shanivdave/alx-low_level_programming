@@ -1,86 +1,134 @@
-#include <stdlib.h>
 #include "main.h"
+#include <stdlib.h>
 #include <stdio.h>
+
+/**
+ * _memset - fills memory with a constant byte
+ *
+ * @s: input pointer that represents memory block
+ *     to fill
+ * @b: characters to fill/set
+ * @n: number of bytes to be filled
+ *
+ * Return: pointer to the filled memory area
+*/
+
+char *_memset(char *s, char b, unsigned int n)
+{
+	unsigned int i = 0;
+
+	while (i < n)
+	{
+		s[i] = b;
+		i++;
+	}
+	return (s);
+}
+
+/**
+ * _calloc - function that allocates memory
+ *           for an array using memset
+ *
+ * @nmemb: size of array
+ * @size: size of each element
+ *
+ * Return: pointer to new allocated memory
+*/
+
+void *_calloc(unsigned int nmemb, unsigned int size)
+{
+	char *ptr;
+
+	if (nmemb == 0 || size == 0)
+		return (NULL);
+	ptr = malloc(nmemb * size);
+	if (ptr == NULL)
+		return (NULL);
+	_memset(ptr, 0, nmemb * size);
+
+	return (ptr);
+}
 
 
 /**
- * main - function with two arguments
- * @argc: argument count
- * @argv: argument value
+ * multiply - initialize array with 0 byte
  *
- * Description: program that multiplies two positive numbers
- * Return: value
- */
+ * @s1: string 1
+ * @s2: string 2
+ *
+ * Return: nothing
+*/
+
+void multiply(char *s1, char *s2)
+{
+	int i, l1, l2, total_l, f_digit, s_digit, res = 0, tmp;
+	char *ptr;
+	void *temp;
+
+	l1 = _length(s1);
+	l2 = _length(s2);
+	tmp = l2;
+	total_l = l1 + l2;
+	ptr = _calloc(sizeof(int), total_l);
+
+	/* store our pointer address to free later */
+	temp = ptr;
+
+	for (l1--; l1 >= 0; l1--)
+	{
+		f_digit = s1[l1] - '0';
+		res = 0;
+		l2 = tmp;
+		for (l2--; l2 >= 0; l2--)
+		{
+			s_digit = s2[l2] - '0';
+			res += ptr[l2 + l1 + 1] + (f_digit * s_digit);
+			ptr[l1 + l2 + 1] = res % 10;
+			res /= 10;
+		}
+		if (res)
+			ptr[l1 + l2 + 1] = res % 10;
+	}
+
+	while (*ptr == 0)
+	{
+		ptr++;
+		total_l--;
+	}
+
+	for (i = 0; i < total_l; i++)
+		printf("%i", ptr[i]);
+	printf("\n");
+	free(temp);
+}
+
+
+/**
+ * main - Entry point
+ *
+ * Description: a program that multiplies
+ *            two positive numbers
+ *
+ * @argc: number of arguments
+ * @argv: arguments array
+ *
+ * Return: 0 on success 98 on faliure
+*/
+
 int main(int argc, char *argv[])
 {
-	int count, len1, len2, temp1, temp2, *array, *result;
+	char *n1 = argv[1];
+	char *n2 = argv[2];
 
-	if (argc != 3)
+	if (argc != 3 || check_number(n1) || check_number(n2))
+		error_exit();
+
+	if (*n1 == '0' || *n2 == '0')
 	{
-		printf("Error\n");
-		exit(98);
+		_putchar('0');
+		_putchar('\n');
 	}
-
-	len1 = _strlen(argv[1]);
-	len2 = _strlen(argv[2]);
-	t_len = len1 + len2 - 1;
-
-	array = malloc(sizeof(char) * (len1 + len2 + 1));
-	if (array == NULL)
-		return (NULL);
-
-	len1 -= 1;
-	len2 -= 1;
-	for (count = 1; argv[count] != '\0', count++)
-	{
-		for (; argv[1][len1]; len1--)
-		{
-			temp1 = argv[1][len1 - 1] - '0';
-		}
-		for (; argv[2][len2]; len2--)
-		{
-			temp2 = argv[2][len2 - 1] - '0';
-		}
-		for (; array[t_len] > 0
-		if ((temp1 * temp2) > 9)
-			array[
-	}
-}
-
-int _atoi(char *s)
-{
-	int i, sign, numb;
-
-	i = 0;
-	sign = 1;
-	numb = 0;
-
-	while (s[i] != '\0')
-	{
-		if (s[i] == '-')
-			sign *= -1;
-		if (s[i] >= '0' && s[i] <= '9')
-		{
-			while (s[i] >= '0' && s[i] <= '9')
-			{
-				numb = (s[i] - '0') * sign + numb * 10;
-				i++;
-			}
-			break;
-		}
-		i++;
-	}
-	return (numb);
-}
-
-int _strlen(char *s)
-{
-	int i;
-
-	i = 0;
-	while (*(s + i) != '\0')
-	{
-		i++;
-	}
-	return (i);
+	else
+		multiply(n1, n2);
+	return (0);
 }
