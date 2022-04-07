@@ -1,38 +1,7 @@
 #include "main.h"
 #include <stdlib.h>
 
-/**
-* printError - prints error message
-* Return: nothing
-**/
-void printError(void)
-{
-	_putchar('E');
-	_putchar('r');
-	_putchar('r');
-	_putchar('o');
-	_putchar('r');
-	_putchar('\n');
-}
-/**
-* digit_checker - checks if the passed arguements are valid
-* @str: pointer to char
-* Return: 0 if all chars are digits else -1
-**/
-int digit_checker(char *str)
-{
-	int i;
 
-	for (i = 0; str[i] != '\0'; i++)
-	{
-		if (str[i] < '0' || str[i] > '9')
-		{
-			printError();
-			return (-1);
-		}
-	}
-	return (0);
-}
 /**
 * _strlen - calculates length of passed string
 * @str: pointer to char
