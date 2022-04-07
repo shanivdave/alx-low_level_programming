@@ -1,151 +1,199 @@
 #include "main.h"
 #include <stdio.h>
 #include <stdlib.h>
+
 /**
- * _atoi_digit - convert a char to integer.
- * @x: character to convert.
- * Return: integer.
- **/
-
-int _atoi_digit(char x)
+ * _prt - print string followed by newline
+ * @s: string to print
+ */
+void _prt(char *s)
 {
-	unsigned int res;
-
-	if (x <= '9' && x >= '0')
-		res = x - '0';
-	return (res);
+	while (*s != '\0')
+		_putchar(*s++);
+	_putchar('\n');
 }
-
 /**
- * _isNumber - Define if a string is a number.
- * @argv: Pointer to string.
- * Return: success (0).
- **/
-int _isNumber(char *argv)
+ * _realloc - Re-allocate memory for a larger or smaller size
+ * @ptr: Pointer to the old memory block
+ * @old_size: The old size of the memory block
+ * @new_size: The new size of the memory block being created
+ *
+ * Return: Pointer to new memory
+ */
+void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size)
 {
-	int i;
+	void *space;
+	char *spacecpy, *ptrcpy;
+	unsigned int i;
 
-	for (i = 0; argv[i]; i++)
-		if (argv[i] < 48 || argv[i] > 57)
+	if (new_size == 0 && ptr != NULL)
+	{
+		free(ptr);
+		return (NULL);
+	}
+	if (new_size == old_size)
+		return (ptr);
+	/* regardless, we need to make new space of new_size */
+	space = malloc(new_size);
+	if (space == NULL)
+		return (NULL);
+	/* if ptr is null, return space without copying */
+	if (ptr == NULL)
+		return (space);
+	/* copy old contents into new space */
+	spacecpy = space;
+	ptrcpy = ptr;
+	for (i = 0; i < old_size && i < new_size; i++)
+		spacecpy[i] = ptrcpy[i];
+	free(ptr);
+	return (space);
+}
+/**
+ * _calloc - Allocate memory and initalize space to zero
+ * @nmemb: number of elements
+ * @size: size of bytes
+ *
+ * Return: pointer to memory space, or NULL
+ */
+void *_calloc(unsigned int nmemb, unsigned int size)
+{
+	void *space;
+	char *memset;
+	unsigned int i;
+
+	if (nmemb == 0 || size == 0)
+		return (NULL);
+	space = malloc(nmemb * size);
+	if (space == NULL)
+		return (NULL);
+
+	memset = space;
+	for (i = 0 ; i < nmemb * size; i++)
+	{
+		*(memset + i) = 0;
+	}
+
+	return (space);
+}
+/**
+ * _notdigit - check to see if string is only digits
+ * @s: string to check
+ *
+ * Return: 0 if only digits, 1 if non digit chars
+ */
+int _notdigit(char *s)
+{
+	for ( ; *s; s++)
+		if (*s < '0' || *s > '9')
 			return (1);
 	return (0);
 }
-
 /**
- *_calloc - allocate array of size * nmemb.
- * @nmemb: number of elements.
- * @size: size of element.
- * Return: pointer to array.
- **/
-
-void *_calloc(unsigned int nmemb, unsigned int size)
+ * rev_ - Reverse a string in place
+ * @s: string to reverse
+ */
+void rev_(char *s)
 {
-	char *tab;
-	unsigned int i;
+	char tmp;
+	int i, j;
 
-	tab = malloc(size * nmemb);
-
-	if (tab == NULL)
-		return (NULL);
-
-	for (i = 0; i < (size * nmemb); i++)
-		tab[i] = '0';
-
-	return (tab);
-}
-
-/**
- * mul_array - multiply two arrays.
- * @a1: first array.
- * @len1: length of array a1.
- * @a2:  char.
- * @a3: array for result.
- * @lena: length of array a3.
- * Return: pointer to array.
- **/
-
-void *mul_array(char *a1, int len1, char a2, char *a3, int lena)
-{
-	int mul = 0, i, k;
-
-	k = lena;
-	for (i = len1 - 1; i >= 0 ; i--)
+	for (i = 0; s[i]; i++)
+		;
+	i--;
+	for (j = 0; j <= i / 2; j++)
 	{
-		mul += (a1[i] - '0') * (a2 - '0') + (a3[k] - '0');
-		a3[k] = (mul % 10) + '0';
-		mul /= 10;
-		k--;
+		tmp = s[j];
+		s[j] = s[i - j];
+		s[i - j] = tmp;
 	}
-
-		while (mul != 0)
-		{
-			mul += a3[k] - '0';
-			a3[k] = (mul % 10) + '0';
-			mul /= 10;
-			k--;
-		}
-
-	return (a3);
 }
 /**
- * print_array - print all digits of array.
- * @nb: number of elements to print.
- * @a: array of elements.
- **/
-void print_array(char *a, int nb)
+ * _addup - add up integer array
+ * @arr: array to count
+ * @n: number of ints to count
+ * @place: which tens place to count
+ *
+ * Return: result of addition
+ */
+int _addup(int *arr, int n, int place)
 {
-	int i = 0;
+	int sum, i;
 
-	while (a[i] == '0' && (i + 1) < nb)
+	for (i = 0, sum = 0; i < n; i++)
+	{
+		sum += arr[n * i + place];
+	}
+	return (sum);
+}
+/**
+ * cut_zeros - cut off my zeros
+ * @s: string to cut
+ *
+ * Return: length of s
+ */
+int cut_zeros(char *s)
+{
+	int i;
+
+	i = 0;
+	while (*s != '\0')
 	{
 		i++;
+		s++;
 	}
-	for (; i < nb; i++)
+	i--;
+	s--;
+	while (*s == '0' && i > 0)
 	{
-		_putchar(a[i]);
+		*s = '\0';
+		s--;
+		i--;
 	}
-	_putchar('\n');
+	return (i);
 }
 
 /**
- *main - print the multiplication of 2 numbers.
- *@argc: array length.
- *@argv: array.
- *Return: 0.
+ * main - multiple two numbers and print the result
+ * @argc: Number of arguments
+ * @argv: Argument strings
+ *
+ * Return: 0
  */
-
 int main(int argc, char *argv[])
 {
-	int i, c, len1, len2, lenres;
-	char E[6] = {'E', 'r', 'r', 'o', 'r', '\n'};
-	char *tabres;
+	int *calc;
+	char *final;
+	unsigned int l1, l2, lsum, i, j, ntmp, rolltmp;
 
-	if (argc != 3 || _isNumber(argv[1]) == 1 || _isNumber(argv[2]) == 1)
+	if (argc != 3)
+		_prt("Error"), exit(98);
+	if (_notdigit(argv[1]) || _notdigit(argv[2]))
+		_prt("Error"), exit(98);
+	for (l1 = 0; argv[1][l1]; l1++)
+		;
+	for (l2 = 0; argv[2][l2]; l2++)
+		;
+	lsum = l1 + l2, final = malloc((lsum + 2) * sizeof(*final));
+	calc = _calloc(lsum * lsum, sizeof(int));
+	if (calc == NULL)
+		_prt("Error"), exit(98);
+	rev_(argv[1]), rev_(argv[2]);
+	for (i = 0; i < l1; i++)
 	{
-		for (i = 0; i < 6; i++)
+		rolltmp = 0, ntmp = 0;
+		for (j = 0; j < l2; j++)
 		{
-			_putchar(E[i]);
+			ntmp = (argv[1][i] - '0') * (argv[2][j] - '0') + rolltmp;
+			calc[i * lsum + j + i] = ntmp % 10, rolltmp = ntmp / 10;
 		}
-		exit(98);
+		for (; j < l2 + i; j++, rolltmp /= 10)
+			calc[i * lsum + j + i] = rolltmp % 10;
+		while (rolltmp)
+			calc[i * lsum + j + i] = rolltmp % 10, rolltmp /= 10, j++;
 	}
-	for (len1 = 0; argv[1][len1]; len1++)
-	;
-	for (len2 = 0; argv[2][len2]; len2++)
-	;
-	lenres = len1 + len2;
-	tabres = _calloc(lenres, sizeof(int));
-	if (tabres == NULL)
-	{
-		free(tabres);
-		return (0);
-	}
-	for (i = len2 - 1, c = 0; i >= 0; i--)
-	{
-	tabres = mul_array(argv[1], len1, argv[2][i], tabres, (lenres - 1 - c));
-	c++;
-	}
-	print_array(tabres, lenres);
-	free(tabres);
-	exit(EXIT_SUCCESS);
+	for (i = 0, rolltmp = 0; i < lsum; i++, rolltmp /= 10)
+		rolltmp += _addup(calc, lsum, i), final[i] = rolltmp % 10 + '0';
+	final[i + 1] = '\0', i = cut_zeros(final), rev_(final);
+	final[i + 2] = '\0', _prt(final), free(calc), free(final);
 	return (0);
 }
