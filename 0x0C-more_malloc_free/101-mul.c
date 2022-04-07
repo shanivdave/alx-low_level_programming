@@ -2,146 +2,245 @@
 #include <stdlib.h>
 
 /**
- * _print - moves a string one place to the left and prints the string
- * @str: string to move
- * @l: size of string
- *
- * Return: void
- */
-void _print(char *str, int l)
+* printError - prints error message
+* Return: nothing
+**/
+void printError(void)
 {
-	int i, j;
-
-	i = j = 0;
-	while (i < l)
-	{
-		if (str[i] != '0')
-			j = 1;
-		if (j || i == l - 1)
-			_putchar(str[i]);
-		i++;
-	}
-
+	_putchar('E');
+	_putchar('r');
+	_putchar('r');
+	_putchar('o');
+	_putchar('r');
 	_putchar('\n');
-	free(str);
-}
-
-/**
- * mul - multiplies a char with a string and places the answer into dest
- * @n: char to multiply
- * @num: string to multiply
- * @num_index: last non NULL index of num
- * @dest: destination of multiplication
- * @dest_index: highest index to start addition
- *
- * Return: pointer to dest, or NULL on failure
- */
-char *mul(char n, char *num, int num_index, char *dest, int dest_index)
-{
-	int j, k, mul, mulrem, add, addrem;
-
-	mulrem = addrem = 0;
-	for (j = num_index, k = dest_index; j >= 0; j--, k--)
-	{
-		mul = (n - '0') * (num[j] - '0') + mulrem;
-		mulrem = mul / 10;
-		add = (dest[k] - '0') + (mul % 10) + addrem;
-		addrem = add / 10;
-		dest[k] = add % 10 + '0';
-	}
-	for (addrem += mulrem; k >= 0 && addrem; k--)
-	{
-		add = (dest[k] - '0') + addrem;
-		addrem = add / 10;
-		dest[k] = add % 10 + '0';
-	}
-	if (addrem)
-	{
-		return (NULL);
-	}
-	return (dest);
 }
 /**
- * check_for_digits - checks the arguments to ensure they are digits
- * @av: pointer to arguments
- *
- * Return: 0 if digits, 1 if not
- */
-int check_for_digits(char **av)
+* digit_checker - checks if the passed arguements are valid
+* @str: pointer to char
+* Return: 0 if all chars are digits else -1
+**/
+int digit_checker(char *str)
 {
-	int i, j;
+	int i;
 
-	for (i = 1; i < 3; i++)
+	for (i = 0; str[i] != '\0'; i++)
 	{
-		for (j = 0; av[i][j]; j++)
+		if (str[i] < '0' || str[i] > '9')
 		{
-			if (av[i][j] < '0' || av[i][j] > '9')
-				return (1);
+			printError();
+			return (-1);
 		}
 	}
 	return (0);
 }
-
 /**
- * init - initializes a string
- * @str: sting to initialize
- * @l: length of strinf
- *
- * Return: void
- */
-void init(char *str, int l)
+* _strlen - calculates length of passed string
+* @str: pointer to char
+* Return: length of string
+**/
+int _strlen(char *str)
 {
 	int i;
 
-	for (i = 0; i < l; i++)
-		str[i] = '0';
-	str[i] = '\0';
+	for (i = 0; str[i] != '\0'; i++)
+		;
+	return (i);
 }
-
 /**
- * main - multiply two numbers
- * @argc: number of arguments
- * @argv: argument vector
- *
- * Return: zero, or exit status of 98 if failure
- */
+* _reallocate - reallocates memory if carry over if greater than 9
+* @str: pointer to char
+* @newSize: new size to allocate
+* Return: pointer to newly allocated memory
+**/
+char *_reallocate(char *str, int newSize)
+{
+	char *newStr;
+
+	newStr = malloc(newSize * sizeof(char *));
+	if (newStr == NULL)
+	{
+		free(str);
+		return (NULL);
+	}
+	return (newStr);
+}
+/**
+* mulNums - multiply an array
+* @str: array to be multiplied
+* @n: multiplier
+* @zeros: number of zeros to be added
+* Return: array with result
+**/
+char *mulNums(char *str, char n, int zeros)
+{
+	char *res, *newRes;
+	int i, k, mul, size, len, reSize;
+
+	len = _strlen(str);
+	size = reSize = len + zeros + 1;
+	res = malloc(sizeof(char) * size);
+	if (res == NULL)
+	{
+		printError();
+		return (NULL);
+	}
+	size--;
+	while (zeros > 0)
+	{
+		res[size] = '0';
+		size--, zeros--;
+	}
+	k = 0;
+	mul = 1;
+	while (size > 0)
+	{
+		mul = ((str[len - 1] - '0') * (n - '0')) + k;
+		res[size] = (mul % 10) + '0';
+		k = mul / 10;
+		size--, len--;
+	}
+	if (k >= 0 && k <= 9)
+	{
+		res[size] = k + '0';
+		return (res);
+	}
+	else if (k > 9)
+	{
+		res[size] = (k % 10) + '0';
+		newRes = _reallocate(res, reSize + 1);
+		if (newRes == NULL)
+			return (NULL);
+		newRes[0] = (k / 10) + '0';
+		for (i = 1; i < reSize + 1; i++)
+			newRes[i] = res[i];
+		free(res);
+		return (newRes);
+	}
+	res[size] = '0';
+	return (res);
+}
+/**
+* addNums - add two arrays of digits
+* @str1: array 1
+* @str2: array2
+* Return: pointer to char with sum
+**/
+char *addNums(char *str1, char *str2)
+{
+	char *add, *newAdd;
+	int sum, k, len1, len2, size, reSize, i;
+
+	len1 = _strlen(str1);
+	len2 = _strlen(str2);
+	size = reSize = len2 + 2;
+	add = malloc(sizeof(char) * size);
+	if (add == NULL)
+	{
+		free(str1);
+		free(str2);
+		printError();
+		return (NULL);
+	}
+	size--, len2--, len1--;
+	sum = k = 0;
+	sum = (str1[len1] - '0') + k;
+	add[size] = (sum % 10) + '0';
+	k = sum / 10;
+	size--, len1--;
+	while (len2 >= 0)
+	{
+		if (len1 < 0)
+			sum = (str2[len2] - '0') + k;
+		else
+			sum = (str1[len1] - '0') + (str2[len2] - '0') + k;
+		add[size] = (sum % 10) + '0';
+		k = sum / 10;
+		size--, len1--, len2--;
+	}
+	if (k >= 0 && k <= 9)
+	{
+		add[size] = k + '0';
+		return (add);
+	}
+	else if (k > 9)
+	{
+		add[size] = (k % 10) + '0';
+		newAdd = _reallocate(add, reSize + 1);
+		if (newAdd == NULL)
+			return (NULL);
+		newAdd[0] = (k / 10) + '0';
+		for (i = 1; i < reSize + 1; i++)
+			newAdd[i] = add[i];
+		free(add);
+		return (newAdd);
+	}
+	add[size] = '0';
+	return (add);
+}
+/**
+* printResult - prints result
+* @result: resultant string
+* Return: nothing
+**/
+void printResult(char *result)
+{
+	int i;
+
+	if (result[0] != '0')
+		_putchar(result[0]);
+
+	for (i = 1; result[i] != '\0'; i++)
+		_putchar(result[i]);
+	_putchar('\n');
+}
+/**
+* main - multiplies two positive numbers and prints result or error
+* @argc: arguement count
+* @argv: poinetr to arguements
+* Return: 0 or exit with 98
+**/
 int main(int argc, char *argv[])
 {
-	int l1, l2, ln, ti, i;
-	char *a;
-	char *t;
-	char e[] = "Error\n";
+	int zero, len1, len2, counter;
+	char *str1, *str2, *current, *temp, *sum;
 
-	if (argc != 3 || check_for_digits(argv))
+	if (argc < 3 || argc > 3)
 	{
-		for (ti = 0; e[ti]; ti++)
-			_putchar(e[ti]);
+		printError();
 		exit(98);
 	}
-	for (l1 = 0; argv[1][l1]; l1++)
-		;
-	for (l2 = 0; argv[2][l2]; l2++)
-		;
-	ln = l1 + l2 + 1;
-	a = malloc(ln * sizeof(char));
-	if (a == NULL)
-	{
-		for (ti = 0; e[ti]; ti++)
-			_putchar(e[ti]);
+	if (digit_checker(argv[1]) == -1 || digit_checker(argv[2]) == -1)
 		exit(98);
-	}
-	init(a, ln - 1);
-	for (ti = l2 - 1, i = 0; ti >= 0; ti--, i++)
+	len1 = _strlen(argv[1]);
+	len2 = _strlen(argv[2]);
+	if (len2 > len1)
 	{
-		t = mul(argv[2][ti], argv[1], l1 - 1, a, (ln - 2) - i);
-		if (t == NULL)
-		{
-			for (ti = 0; e[ti]; ti++)
-				_putchar(e[ti]);
-			free(a);
+		str1 = argv[2];
+		str2 = argv[1];
+		counter = len1 - 1;
+	}
+	else
+	{
+		str1 = argv[1];
+		str2 = argv[2];
+		counter = len2 - 1;
+	}
+	zero = 0;
+	current = mulNums(str1, str2[counter], zero);
+	if (current == NULL)
+		exit(98);
+	while (--counter >= 0)
+	{
+		temp = mulNums(str1, str2[counter], zero++);
+		if (temp == NULL)
 			exit(98);
-		}
+		sum = addNums(current, temp);
+		if (sum == NULL)
+			exit(98);
+		free(current);
+		free(temp);
+		current = sum;
 	}
-	_print(a, ln - 1);
+	printResult(sum);
 	return (0);
 }
