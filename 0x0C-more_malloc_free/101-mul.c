@@ -36,7 +36,7 @@ int main(int argc, char *argv[])
 	{
 		for (; argv[1][len1]; len1--)
 		{
-			temp1 = argv[1][len1 - 1] - '0';;
+			temp1 = argv[1][len1 - 1] - '0';
 		}
 		for (; argv[2][len2]; len2--)
 		{
