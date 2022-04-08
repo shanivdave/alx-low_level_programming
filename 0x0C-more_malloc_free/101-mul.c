@@ -5,7 +5,7 @@ int find_len(char *str);
 char *create_xarray(int size);
 char *iterate_zeroes(char *str);
 void get_prod(char *prod, char *mult, int digit, int zeroes);
-void add_nums(char *final_prod, char *next_prod, int next_len);
+void add_nums(char *num1, char *num2, int mul);
 
 /**
  * find_len - Finds the length of a string.
@@ -141,40 +141,40 @@ void get_prod(char *prod, char *mult, int digit, int zeroes)
  * @next_prod: The next product to be added.
  * @next_len: The length of next_prod.
  */
-void add_nums(char *final_prod, char *next_prod, int next_len)
+void add_nums(char *num1, char *num2, int mul)
 {
 	int num, tens = 0;
 
-	while (*(final_prod + 1))
-		final_prod++;
+	while (*(num1 + 1))
+		num1++;
 
-	while (*(next_prod + 1))
-		next_prod++;
+	while (*(num2 + 1))
+		num2++;
 
-	for (; *final_prod != 'x'; final_prod--)
+	for (; *num1 != 'x'; final_prod--)
 	{
-		num = (*final_prod - '0') + (*next_prod - '0');
+		num = (*num1 - '0') + (*num2 - '0');
 		num += tens;
-		*final_prod = (num % 10) + '0';
+		*num1 = (num % 10) + '0';
 		tens = num / 10;
 
-		next_prod--;
-		next_len--;
+		num2--;
+		mul--;
 	}
 
-	for (; next_len >= 0 && *next_prod != 'x'; next_len--)
+	for (; mul >= 0 && *num2 != 'x'; mul--)
 	{
-		num = (*next_prod - '0');
+		num = (*num2 - '0');
 		num += tens;
-		*final_prod = (num % 10) + '0';
+		*num1 = (num % 10) + '0';
 		tens = num / 10;
 
-		final_prod--;
-		next_prod--;
+		num1--;
+		num2--;
 	}
 
 	if (tens)
-		*final_prod = (tens % 10) + '0';
+		*num1 = (tens % 10) + '0';
 }
 
 /**
@@ -188,7 +188,7 @@ void add_nums(char *final_prod, char *next_prod, int next_len)
  */
 int main(int argc, char *argv[])
 {
-	char *final_prod, *next_prod;
+	char *num1, *num2;
 	int size, index, digit, zeroes = 0;
 
 	if (argc != 3)
@@ -208,24 +208,24 @@ int main(int argc, char *argv[])
 	}
 
 	size = find_len(argv[1]) + find_len(argv[2]);
-	final_prod = create_xarray(size + 1);
-	next_prod = create_xarray(size + 1);
+	num1 = create_xarray(size + 1);
+	num2 = create_xarray(size + 1);
 
 	for (index = find_len(argv[2]) - 1; index >= 0; index--)
 	{
 		digit = get_digit(*(argv[2] + index));
-		get_prod(next_prod, argv[1], digit, zeroes++);
-		add_nums(final_prod, next_prod, size - 1);
+		get_prod(num2, argv[1], digit, zeroes++);
+		add_nums(num1, num2, size - 1);
 	}
-	for (index = 0; final_prod[index]; index++)
+	for (index = 0; num1[index]; index++)
 	{
-		if (final_prod[index] != 'x')
-			putchar(final_prod[index]);
+		if (num1[index] != 'x')
+			putchar(num1[index]);
 	}
 	putchar('\n');
 
-	free(next_prod);
-	free(final_prod);
+	free(num2);
+	free(num1);
 
 	return (0);
 }
