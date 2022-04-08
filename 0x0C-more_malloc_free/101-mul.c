@@ -2,44 +2,91 @@
 #include <stdlib.h>
 #include <stdio.h>
 /**
- * is_digit - checks for digits
- * @c: input character to check for digit
- * Return: 0 failure, 1 success
- */
-int is_digit(char c)
+ * _puts - prints a string, followed by a new line,
+ * @str: pointer to the string to print
+ * Return: void
+*/
+
+
+void _puts(char *str)
 {
-if (c >= '0' && c <= '9')
-return (1);
-printf("Error\n");
-return (98);
+int i = 0;
+while (str[i])
+{
+	_putchar(str[i]);
+	i++;
 }
+
+}
+
 /**
- * multiply - multiplies 2 #'s, prints result, must be 2 #'s
- * @num1: factor # 1 (1st number)
- * @num2: factor # 2 (2nd number)
- * Return: 0 fail, 1 success
+ * _atoi - convert a string to an integer.
+ * @s: char type string
+ * Return: integer converted
  */
-int *multiply(char *num1, char *num2)
-/**
- * main - multiply 2 input #'s and print result or print Error
- * @argc: input count of args
- * @argv: input array of string args
- * Return: 0, Success
- */
-int main(int argc, char **argv)
+
+int _atoi(const char *s)
 {
-char *num1, *num2;
+    int sign = 1;
+	unsigned long int resp = 0, firstNum, i;
+
+	for (firstNum = 0; !(s[firstNum] >= 48 && s[firstNum] <= 57); firstNum++)
+	{
+		if (s[firstNum] == '-')
+		{
+			sign *= -1;
+		}
+	}
+
+	for (i = firstNum; s[i] >= 48 && s[i] <= 57; i++)
+	{
+		resp *= 10;
+		resp += (s[i] - 48);
+	}
+
+	return (sign * resp);
+}
+
+/**
+ * print_int - prints an integer.
+ * @n: int
+ * Return: 0
+ */
+
+void print_int(unsigned long int n)
+{
+
+unsigned  long int divisor = 1, i, resp;
+
+for (i = 0; n / divisor > 9; i++, divisor *= 10)
+;
+
+for (; divisor >= 1; n %= divisor, divisor /= 10)
+{
+	resp = n / divisor;
+	_putchar('0' + resp);
+}
+
+}
+
+/**
+ * main - print the result of the multiplication, followed by a new line
+ * @argc: int
+ * @argv: list
+ * Return: 0
+ */
+
+int main(int argc, char const *argv[])
+{
+(void)argc;
+
 if (argc != 3)
 {
-printf("Error\n");
-exit(98);
-num1 = argv[1], num2 = argv[2];
-else
-{num1 = argv[2], num2 = argv[1];
+	_puts("Error ");
+	exit(98);
 }
-sum_result = multiply(num1 * num2);
-if (sum_result == NULL)
-exit(98);
-print_me(sum_result);
+print_int(_atoi(argv[1]) * _atoi(argv[2]));
+_putchar('\n');
+
 return (0);
 }
