@@ -1,11 +1,12 @@
 #include "main.h"
 #include <stdlib.h>
 #include <stdio.h>
+
 int find_len(char *str);
 char *create_xarray(int size);
 char *iterate_zeroes(char *str);
 void get_prod(char *prod, char *mult, int digit, int zeroes);
-void add_nums(char *num1, char *num2, int mul);
+void add_nums(char *final_prod, char *next_prod, int next_len);
 
 /**
  * find_len - Finds the length of a string.
@@ -141,40 +142,40 @@ void get_prod(char *prod, char *mult, int digit, int zeroes)
  * @next_prod: The next product to be added.
  * @next_len: The length of next_prod.
  */
-void add_nums(char *num1, char *num2, int mul)
+void add_nums(char *final_prod, char *next_prod, int next_len)
 {
 	int num, tens = 0;
 
-	while (*(num1 + 1))
-		num1++;
+	while (*(final_prod + 1))
+		final_prod++;
 
-	while (*(num2 + 1))
-		num2++;
+	while (*(next_prod + 1))
+		next_prod++;
 
-	for (; *num1 != 'x'; final_prod--)
+	for (; *final_prod != 'x'; final_prod--)
 	{
-		num = (*num1 - '0') + (*num2 - '0');
+		num = (*final_prod - '0') + (*next_prod - '0');
 		num += tens;
-		*num1 = (num % 10) + '0';
+		*final_prod = (num % 10) + '0';
 		tens = num / 10;
 
-		num2--;
-		mul--;
+		next_prod--;
+		next_len--;
 	}
 
-	for (; mul >= 0 && *num2 != 'x'; mul--)
+	for (; next_len >= 0 && *next_prod != 'x'; next_len--)
 	{
-		num = (*num2 - '0');
+		num = (*next_prod - '0');
 		num += tens;
-		*num1 = (num % 10) + '0';
+		*final_prod = (num % 10) + '0';
 		tens = num / 10;
 
-		num1--;
-		num2--;
+		final_prod--;
+		next_prod--;
 	}
 
 	if (tens)
-		*num1 = (tens % 10) + '0';
+		*final_prod = (tens % 10) + '0';
 }
 
 /**
@@ -188,7 +189,7 @@ void add_nums(char *num1, char *num2, int mul)
  */
 int main(int argc, char *argv[])
 {
-	char *num1, *num2;
+	char *final_prod, *next_prod;
 	int size, index, digit, zeroes = 0;
 
 	if (argc != 3)
@@ -208,24 +209,24 @@ int main(int argc, char *argv[])
 	}
 
 	size = find_len(argv[1]) + find_len(argv[2]);
-	num1 = create_xarray(size + 1);
-	num2 = create_xarray(size + 1);
+	final_prod = create_xarray(size + 1);
+	next_prod = create_xarray(size + 1);
 
 	for (index = find_len(argv[2]) - 1; index >= 0; index--)
 	{
 		digit = get_digit(*(argv[2] + index));
-		get_prod(num2, argv[1], digit, zeroes++);
-		add_nums(num1, num2, size - 1);
+		get_prod(next_prod, argv[1], digit, zeroes++);
+		add_nums(final_prod, next_prod, size - 1);
 	}
-	for (index = 0; num1[index]; index++)
+	for (index = 0; final_prod[index]; index++)
 	{
-		if (num1[index] != 'x')
-			putchar(num1[index]);
+		if (final_prod[index] != 'x')
+			putchar(final_prod[index]);
 	}
 	putchar('\n');
 
-	free(num2);
-	free(num1);
+	free(next_prod);
+	free(final_prod);
 
 	return (0);
 }
