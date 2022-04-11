@@ -1,1 +1,1 @@
-C - Structures, typedef projects
+C - Preprocessor projects
