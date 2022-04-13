@@ -1,39 +1,37 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <udis86.h>
-
+#include<stdio.h>
+#include<stdlib.h>
 /**
-  * main - ...
-  * @argc: ...
-  * @argv: ...
-  *
-  * Return: ...
-  */
+ * main- Entry point
+(* a blank line
+ *@argc: the number of parameters.
+ *@argv: the parameeters in the case the number ob bytes.
+* Description: this program prints opcodes in hexa)?
+* Return: 0 in succes
+*/
 int main(int argc, char *argv[])
 {
-	ud_t ud_obj;
-	int val = 0, i = 0;
+	int i, n;
 
-	if (argc == 2)
+
+	if (argc != 2)
 	{
-		val = atoi(argv[1]);
-
-		if (val < 0)
-		{
-			printf("Error\n");
-			exit(2);
-		}
-
-		ud_unit(&ud_obj);
-		ud_set_input_buffer(&ud_obj, argv[1], val);
-		ud_set_mode(&ud_obj, 64);
-		ud_set_syntax(&ud_obj, UD_SYN_INTEL);
-
-		while (ud_disassemble(&ud_obj))
-		{
-			printf("\t%s\n", ud_insn_hex(&ud_obj));
-		}
+		printf("Error\n");
+		return (1);
+	}
+	n = atoi(argv[1]);
+	if (n < 0)
+	{
+		printf("Error\n");
+		exit(2);
 	}
 
+	for (i = 0; i < n; i++)
+	{
+		printf("%02hhx", *((char *)main + i));
+		if (i < n - 1)
+			printf(" ");
+		else
+			printf("\n");
+	}
 	return (0);
 }
