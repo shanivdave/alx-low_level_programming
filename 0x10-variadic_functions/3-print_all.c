@@ -1,29 +1,79 @@
-#include "variadic_functions.h"
+#include <stdlib.h>
+#include <stdio.h>
 #include <stdarg.h>
-#include<stdio.h>
+#include "variadic_functions.h"
 /**
- * print_strings - print strings
- * @separator:char
- * @n:unsigned int
- * Return:void
+ * print_int - prints an int
+ * @args: the list of args
  */
-void print_strings(const char *separator, const unsigned int n, ...)
+void print_int(va_list args)
 {
-	va_list list;
-	unsigned int i;
-	char *str;
+	printf("%d", va_arg(args, int));
+}
+/**
+ * print_char - prints a char
+ * @args: the list of args
+ */
+void print_char(va_list args)
+{
+	printf("%c", va_arg(args, int));
+}
+/**
+ * print_string - prints a string
+ * @args: the list of args
+ */
+void print_string(va_list args)
+{
+	char *z = va_arg(args, char *);
 
-	va_start(list, n);
-	for (i = 0; i < n; i++)
+	if (!z)
 	{
-		str = va_arg(list, char *);
-		if (str)
-			printf("%s", str);
-		else
-			printf("(nil)");
-		if (i < n - 1 && separator)
-			printf("%s", separator);
+		printf("(nil)");
+		return;
 	}
-	va_end(list);
+	printf("%s", z);
+}
+/**
+ * print_float - prints floats
+ * @args: the list of args
+ */
+void print_float(va_list args)
+{
+	printf("%f", va_arg(args, double));
+}
+/**
+ * print_all - prints all
+ * @format: formats of arg
+ */
+void print_all(const char * const format, ...)
+{
+	types_t types[] = {
+	{'c', print_char},
+	{'i', print_int},
+	{'f', print_float},
+	{'s', print_string},
+	{'\0', NULL}
+	};
+	va_list args;
+	char *sep1 = "", *sep2 = ", ";
+	int count1 = 0, count2 = 0;
+
+	va_start(args, format);
+	while (format !=  NULL && format[count1] != '\0')
+	{
+		count2 = 0;
+		while (types[count2].z != '\0')
+		{
+			if (format[count1] == types[count2].z)
+			{
+				printf("%s", sep1);
+				types[count2].f(args);
+				sep1 = sep2;
+			}
+			count2++;
+		}
+		count1++;
+	}
 	printf("\n");
+	va_end(args);
 }
