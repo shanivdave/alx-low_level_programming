@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 
 void printfirst(void) __attribute__ ((constructor));
