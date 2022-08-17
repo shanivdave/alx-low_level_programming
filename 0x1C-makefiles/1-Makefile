@@ -1,5 +1,4 @@
 SRC = main.c school.c
 
-
 all : main.o school.o
 	$(CC) $(SRC) -o school
