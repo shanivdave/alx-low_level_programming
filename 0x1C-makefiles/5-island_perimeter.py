@@ -1,29 +1,24 @@
 #!/usr/bin/python3
 """
-Island Perimeter
+5-island_perimeter
 """
 
+
 def island_perimeter(grid):
-    """returns the perimeter of the island described in grid
-    Args:
-        grid(matrix): input grid
-    Description:
-        Traverse the land mass, and
-        for the lake's nearest neighbor
-        then return the total length
-    """
-    y = 0
-    x = 0
-    
-    for row in range(1, len(grid) - 1):
-            for col in range(1, len(grid[row]) - 1):
-                if grid[row][col] == 1:
-                    if grid[row][col - 1] == 0:
-                        y += 1
-                    if grid[row][col + 1] == 0:
-                        y += 1
-                    if grid[row - 1][col] == 0:
-                        x += 1
-                    if grid[row + 1][col] == 0:
-                        x += 1
-    return x + 
+    """Finds perimeter of island provided as grid"""
+    gridWidth = len(grid)
+    gridLength = len(grid[0])
+    island_count = 0
+    perimeter = 0
+    sides = 4
+
+    if gridLength <= 100 and gridWidth <= 100:
+        for i in range(len(grid)):
+            for j in range(len(grid[i])):
+                if grid[i][j] == 1:
+                    island_count += 1
+        if island_count == 0:
+            perimeter = 0
+            return perimeter
+        perimeter = ((sides * island_count)/2) + 2
+        return int(perimeter)
