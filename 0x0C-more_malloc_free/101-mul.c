@@ -1,6 +1,4 @@
 #include "main.h"
-#include <stdlib.h>
-#include <stdio.h>
 
 /**
  * main - multiplies two positive numbers
@@ -29,4 +27,3 @@ int i, j;
 	printf("%lu\n", mul);
 return (0);
 }
-
